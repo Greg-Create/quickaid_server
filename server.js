@@ -35,9 +35,13 @@ app.get("/user/:id", (req, res) => {
 
 app.post("/transcript", async (req, res) => {
   const transcript = req.body.transcript;
+  const lat = req.body.lat
+  const long = req.body.long
   console.log("Received transcript:", transcript);
   if (transcript === "burn") {
     call()
+    res.json({ message: "Contacted Emergency Services", transcript: transcript });
+
     // try {
     //   const response = await axios.post("http://localhost:8080/gif", {
     //     transcript: "burn",
@@ -53,7 +57,7 @@ app.post("/transcript", async (req, res) => {
     //   res.status(500).json({ message: "Error fetching GIF" });
     // }
   } else {
-    res.json({ message: "Transcript received", transcript: transcript });
+    res.json({ message: "Transcript received", transcript: transcript,lat: lat, long:long });
   }
 });
 
