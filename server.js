@@ -32,11 +32,22 @@ app.get("/user/:id", (req, res) => {
   const userId = req.params.id;
   res.send(`User ID: ${userId}`);
 });
-
+function calculateAddress(lat, long) {
+  return fetch(
+    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
+  )
+    .then((response) => response.json())
+    .then((json) => json.display_name)
+    .catch((error) => {
+      console.error(error);
+      return "Error: Unable to fetch address";
+    });
+}
 app.post("/transcript", async (req, res) => {
   const transcript = req.body.transcript;
   const lat = req.body.lat
   const long = req.body.long
+  const address = calculateAddress(lat,long)
   console.log("Received transcript:", transcript);
   if (transcript === "burn") {
     call()
@@ -57,7 +68,7 @@ app.post("/transcript", async (req, res) => {
     //   res.status(500).json({ message: "Error fetching GIF" });
     // }
   } else {
-    res.json({ message: "Transcript received", transcript: transcript,lat: lat, long:long });
+    res.json({ message: "Transcript received", transcript: transcript,address:address });
   }
 });
 
