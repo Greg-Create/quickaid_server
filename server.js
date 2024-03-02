@@ -15,7 +15,7 @@ app.post("/transcribe",async  (req, res) => {
 
   // Handle the transcription text as needed
   try {
-    await axios.post("https://quickaid-server.vercel.app/transcript", { transcript: transcriptionText });
+    await axios.post("https://quickaid-server.vercel.app/transcript", { transcript: transcriptionText }, { timeout: 60000 });
     res.sendStatus(200); // Success response to Twilio
   } catch (error) {
     console.error("Error:", error);
