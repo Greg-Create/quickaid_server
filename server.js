@@ -1,13 +1,43 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-
+const http = require('http');
+const io = require('socket.io')(server);
+const AWS = require('aws-sdk');
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 require("dotenv").config()
 var client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_TOKEN)
+
+AWS.config.update({
+  region: process.env.AWS_REGION,
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+});
+
+const lexruntime = new AWS.LexRuntime();
+
+io.on('connection', (socket) => {
+  socket.on('message', (text) => {
+    var params = {
+      botAlias: process.env.BOT_ALIAS,
+      botName: process.env.BOT_NAME,
+      inputText: text,
+      userId: process.env.USER_ID,
+      sessionAttributes: {}
+    };
+
+    lexruntime.postText(params, function(err, data) {
+      if (err) {
+        console.log(err, err.stack);
+      } else {
+        socket.emit('message', data.message);
+      }
+    });
+  });
+});
 
 app.post("/transcribe", (req, res) => {
   const transcriptionText = req.body.TranscriptionText;
@@ -28,15 +58,6 @@ async function call(address){
   })
 }
 
-
-app.get('/contact', (req, res) => {
-  res.status(200).json('Welcome, your app is working well');
-});
-
-app.get("/user/:id", (req, res) => {
-  const userId = req.params.id;
-  res.send(`User ID: ${userId}`);
-});
 function calculateAddress(lat, long) {
   return fetch(
     `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
@@ -77,24 +98,14 @@ app.post("/transcript", async (req, res) => {
   }
 });
 
-app.post("/gif", (req, res) => {
-  if (req.body.transcript === "burn") {
-    res.json({
-      message:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_WF_JjUjuToNWN3WCU0f3RqFy3qDfhQTDnQ&usqp=CAU",
-      transcript: req.body.transcript,
-    });
-  }
-});
-
 app.use((req, res, next) => {
   res.status(404).send("404 - Not Found");
 });
 
+const server = http.createServer(app);
 const PORT = 8080;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
-
 
 module.exports = app
