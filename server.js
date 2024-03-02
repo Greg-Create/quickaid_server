@@ -9,15 +9,20 @@ app.use(express.json());
 require("dotenv").config()
 var client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_TOKEN)
 
+app.post("/transcribe", (req, res) => {
+  const transcriptionText = req.body.TranscriptionText;
+  console.log("Transcription:", transcriptionText);
+  // Handle the transcription text as needed
+  res.sendStatus(200);
+});
 
 app.get("/", (req, res) => {
   res.send("Hello, world!");
 });
 
 async function call(address){
-  console.log("Hello")
   await client.calls.create({
-    twiml: `<Response><Say>Someone is burned, we need an ambulance as soon as possible, the incident is at ${address}</Say></Response>`,
+    twiml: `<Response><Say>Someone is burned, we need an ambulance as soon as possible, the incident is at ${address}</Say><Record transcribe="true" timeout="30" transcribeCallback="https://quickaid-server.vercel.app/transcribe" /></Response>`,
     to: '+14372555840',
     from: '+18285200175'
   })
