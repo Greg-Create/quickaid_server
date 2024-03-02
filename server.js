@@ -37,7 +37,7 @@ function calculateAddress(lat, long) {
     `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
   )
     .then((response) => response.json())
-    .then((json) => json.display_name)
+    .then((json) => json.display_name.split(",").slice(0,4).join(" "))
     .catch((error) => {
       console.error(error);
       return "Error: Unable to fetch address";
