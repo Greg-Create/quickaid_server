@@ -47,7 +47,7 @@ app.post("/transcript", async (req, res) => {
   const transcript = req.body.transcript;
   const lat = req.body.lat
   const long = req.body.long
-  const address = calculateAddress(lat,long)
+  const address = await calculateAddress(lat,long)
   console.log("Received transcript:", transcript);
   if (transcript === "burn") {
     call()
