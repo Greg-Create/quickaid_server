@@ -14,10 +14,10 @@ app.get("/", (req, res) => {
   res.send("Hello, world!");
 });
 
-async function call(){
+async function call(address){
   console.log("Hello")
   await client.calls.create({
-    twiml: `<Response><Say>There is an emergency, we need an ambulance, it is a burn at u ottawa</Say></Response>`,
+    twiml: `<Response><Say>Someone is burned, we need an ambulance as soon as possible, the incident is at ${address}</Say></Response>`,
     to: '+14372555840',
     from: '+18285200175'
   })
@@ -37,7 +37,7 @@ function calculateAddress(lat, long) {
     `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
   )
     .then((response) => response.json())
-    .then((json) => json.display_name.split(",").slice(0,4).join(" "))
+    .then((json) => json.display_name.split(",").slice(0,5).join(" "))
     .catch((error) => {
       console.error(error);
       return "Error: Unable to fetch address";
@@ -50,7 +50,7 @@ app.post("/transcript", async (req, res) => {
   const address = await calculateAddress(lat,long)
   console.log("Received transcript:", transcript);
   if (transcript === "burn") {
-    call()
+    call(address)
     res.json({ message: "Contacted Emergency Services", transcript: transcript });
 
     // try {
