@@ -59,8 +59,11 @@ app.post("/transcript", async (req, res) => {
   const transcript = req.body.transcript;
   const lat = req.body.lat
   const long = req.body.long
+  let address
   if(lat && long){
-  const address = await calculateAddress(lat,long)
+   address = await calculateAddress(lat,long)
+  }else{
+    address = ""
   }
   console.log("Received transcript:", transcript);
   if (transcript === "burn") {
@@ -82,7 +85,7 @@ app.post("/transcript", async (req, res) => {
     //   res.status(500).json({ message: "Error fetching GIF" });
     // }
   } else {
-    res.json({ message: "Transcript received", transcript: transcript,address:address?address :"" });
+    res.json({ message: "Transcript received", transcript: transcript,address:address });
   }
 });
 
