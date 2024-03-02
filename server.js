@@ -29,7 +29,7 @@ app.get("/", (req, res) => {
 
 async function call(address){
   await client.calls.create({
-    twiml: `<Response><Say>Someone is burned, we need an ambulance as soon as possible, the incident is at ${address}</Say><Record transcribe="true" timeout="30" transcribeCallback="https://quickaid-server.vercel.app/transcribe" /></Response>`,
+    twiml: `<Response><Say>Someone is burned, we need an ambulance as soon as possible, the incident is at ${address}</Say><Record transcribe="true" maxLength="30" transcribeCallback="https://quickaid-server.vercel.app/transcribe" /></Response>`,
     to: '+14372555840',
     from: '+18285200175'
   })
@@ -59,7 +59,9 @@ app.post("/transcript", async (req, res) => {
   const transcript = req.body.transcript;
   const lat = req.body.lat
   const long = req.body.long
+  if(lat && long){
   const address = await calculateAddress(lat,long)
+  }
   console.log("Received transcript:", transcript);
   if (transcript === "burn") {
     call(address)
@@ -80,7 +82,7 @@ app.post("/transcript", async (req, res) => {
     //   res.status(500).json({ message: "Error fetching GIF" });
     // }
   } else {
-    res.json({ message: "Transcript received", transcript: transcript,address:address });
+    res.json({ message: "Transcript received", transcript: transcript,address:address?address :"" });
   }
 });
 
