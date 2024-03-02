@@ -5,51 +5,64 @@ const http = require('http');
 const app = express();
 const server = http.createServer(app);
 const io = require('socket.io')(server);
-const AWS = require('aws-sdk');
+const { LexRuntimeV2Client, PostTextCommand, RecognizeTextCommand } = require("@aws-sdk/client-lex-runtime-v2");
 
 app.use(cors());
 app.use(express.json());
 require("dotenv").config()
 var client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_TOKEN)
 
-AWS.config.update({
+const lexruntime = new LexRuntimeV2Client({
   region: process.env.AWS_REGION,
-  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+  }
 });
 
-const lexruntime = new AWS.LexRuntime();
+app.post("/transcribe", async (req, res) => {
+  const transcriptionText = req.body.transcript;
+  const data = await waitForResponse(transcriptionText);
+  console.log("Received transcript:", transcriptionText);
 
-io.on('connection', (socket) => {
-  socket.on('message', (text) => {
-    var params = {
-      botAlias: process.env.BOT_ALIAS,
-      botName: process.env.BOT_NAME,
-      inputText: text,
-      userId: process.env.USER_ID,
-      sessionAttributes: {}
-    };
+  const lat = req.body.lat
+  const long = req.body.long
+  let address;
+  if (lat && long) {
+   address = await calculateAddress(lat,long);
+  } else {
+    address = "";
+  }
+  
+  if (transcriptionText === "burn") {
+    call(address)
+    res.json({ message: "Contacted Emergency Services", transcript: transcriptionText, data: data });
+  } else {
+    res.json({ message: "Transcript received", transcript: transcriptionText ,address:address, data: data });
+  }
+});
 
-    lexruntime.postText(params, function(err, data) {
+async function waitForResponse(message) {
+  var params = {
+    botId: process.env.BOT_ID,
+    botAliasId: process.env.BOT_ALIAS_ID,
+    localeId: "en_US",
+    sessionId: process.env.SESSION_ID,
+    text: message,
+  };
+  try {
+    const data = await new Promise((resolve, reject) => lexruntime.send(new RecognizeTextCommand(params), (err, data) => {
       if (err) {
-        console.log(err, err.stack);
+        reject(err);
       } else {
-        socket.emit('message', data.message);
+        resolve(data);
       }
-    });
-  });
-});
-
-app.post("/transcribe", (req, res) => {
-  const transcriptionText = req.body.TranscriptionText;
-  console.log("Transcription:", transcriptionText);
-  // Handle the transcription text as needed
-  res.sendStatus(200);
-});
-
-app.get("/", (req, res) => {
-  res.send("Hello, world!");
-});
+    }));
+    return data;
+  } catch (err) {
+    console.log(err, err.stack);
+  }
+}
 
 async function call(address){
   await client.calls.create({
@@ -59,45 +72,18 @@ async function call(address){
   })
 }
 
-function calculateAddress(lat, long) {
-  return fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
-  )
-    .then((response) => response.json())
-    .then((json) => json.display_name.split(",").slice(0,5).join(" "))
-    .catch((error) => {
-      console.error(error);
-      return "Error: Unable to fetch address";
-    });
-}
-app.post("/transcript", async (req, res) => {
-  const transcript = req.body.transcript;
-  const lat = req.body.lat
-  const long = req.body.long
-  const address = await calculateAddress(lat,long)
-  console.log("Received transcript:", transcript);
-  if (transcript === "burn") {
-    call(address)
-    res.json({ message: "Contacted Emergency Services", transcript: transcript });
-
-    // try {
-    //   const response = await axios.post("http://localhost:8080/gif", {
-    //     transcript: "burn",
-    //   });
-    //   const gifUrl = response.data.message;
-    //   res.json({
-    //     message: "Transcript received",
-    //     transcript: transcript,
-    //     image: gifUrl,
-    //   });
-    // } catch (error) {
-    //   console.error("Error fetching GIF:", error);
-    //   res.status(500).json({ message: "Error fetching GIF" });
-    // }
-  } else {
-    res.json({ message: "Transcript received", transcript: transcript,address:address });
+async function calculateAddress(lat, long) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
+    );
+    const json = await response.json();
+    return json.display_name.split(",").slice(0, 5).join(" ");
+  } catch (error) {
+    console.error(error);
+    return "Error: Unable to fetch address";
   }
-});
+}
 
 app.use((req, res, next) => {
   res.status(404).send("404 - Not Found");
@@ -108,4 +94,4 @@ server.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-module.exports = app
+module.exports = app;
