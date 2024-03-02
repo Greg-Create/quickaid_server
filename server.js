@@ -9,11 +9,18 @@ app.use(express.json());
 require("dotenv").config()
 var client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_TOKEN)
 
-app.post("/transcribe", (req, res) => {
+app.post("/transcribe",async  (req, res) => {
   const transcriptionText = req.body.TranscriptionText;
   console.log("Transcription:", transcriptionText);
+
   // Handle the transcription text as needed
-  res.sendStatus(200);
+  try {
+    await axios.post("https://quickaid-server.vercel.app/transcript", { transcript: transcriptionText });
+    res.sendStatus(200); // Success response to Twilio
+  } catch (error) {
+    console.error("Error:", error);
+    res.sendStatus(500); // Error response to Twilio
+  }
 });
 
 app.get("/", (req, res) => {
