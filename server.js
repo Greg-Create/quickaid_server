@@ -350,6 +350,7 @@ app.post(
     }
     res.json({ message: instructions, transcript: transcript });
     if (isEmergency) {
+      console.log("BOBBBBBb")
       await contactEmergency(address, condition);
       isEmergency = false
      
