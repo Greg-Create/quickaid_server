@@ -284,6 +284,7 @@ app.post(
     }
     res.json({ message: instructions, transcript: transcript });
     if (isEmergency) {
+      console.log("Emergency:", isEmergency)
        call(address, condition, extraText);
     }
   },
