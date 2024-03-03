@@ -341,7 +341,7 @@ app.post(
         address: address,
       };
       await axios
-        .get("http://localhost:8080/contact", postData)
+        .get("https://quickaid-server.vercel.app/contact", postData)
         .then((response) => {
           console.log("Response:", response.data);
         })
