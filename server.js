@@ -16,7 +16,8 @@ app.use((req, res, next) => {
   res.status(404).send("404 - Not Found");
 });
 
-async function call(address, condition){
+async function call(address, condition, extraText){
+  if (extraText) condition = "having a " + condition;
   await client.calls.create({
     twiml: `<Response><Say>Someone is ${condition}, we need an ambulance as soon as possible, the incident is at ${address}</Say></Response>`,
     to: '+14372555840',
@@ -59,35 +60,44 @@ app.post("/transcript", async (req, res) => {
 
   let isEmergency = false;
   let instructions = "";
+  let extraText = false;
   switch (condition) {
     case "heart attack":
         instructions = "Please stay calm and take deep breaths. If you have aspirin, take it. If you have nitroglycerin, take it. If you have a heart condition, take your prescribed medication. Emergency Services have been contacted.";
         isEmergency = true;
+        extraText = true;
       break;
     case "stroke":
         instructions = "If someone is having a stroke, recognize the signs using FAST (Face drooping, Arm weakness, Speech difficulty, Time to call emergency) and call emergency services immediately for professional medical care. Stay with the person, keep them calm, and do not give them anything to eat or drink. Emergency Services have been contacted.";
         isEmergency = true;
+        extraText = true;
       break;
     case "first degree burn":
         instructions = "Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage.";
+        extraText = true;
       break;
     case "second degree burn":
         instructions = "Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage. Emergency Services have been contacted.";
         isEmergency = true;
+        extraText = true;
       break;
     case "third degree burn":
         instructions = "Do NOT apply water, ointments, or ice. Cover the burn with a sterile bandage. Emergency Services have been contacted.";
         isEmergency = true; 
+        extraText = true;
       break;
     case "burn":
         instructions = "Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage.";
+        extraText = true;
       break;
     case "nose bleed":
         instructions = "Sit down and lean forward. Pinch your nose and breathe through your mouth. Apply an ice pack to your nose. If the bleeding doesn't stop after 20 minutes, call emergency services.";
+        extraText = true; 
       break;
     case "seizure":
         instructions = "Move any nearby objects away from the person. Place the person on their side after the seizure ends. Stay with the person until they are fully alert. Emergency Services have been contacted.";
         isEmergency = true;
+        extraText = true;
       break;
     case "choking":
         instructions = "Perform the Heimlich maneuver. If the person is unable to breathe, call emergency services.";
@@ -103,19 +113,28 @@ app.post("/transcript", async (req, res) => {
     case "broken bone":
         instructions = "Immobilize the injured area. Apply ice to the injured area. Emergency Services have been contacted.";
         isEmergency = true;
+        extraText = true;
       break;
     case "sprained ankle":
         instructions = "Rest the ankle. Ice the ankle. Compress the ankle. Elevate the ankle.";
+        extraText = true;
       break;
     case "concussion":
         instructions = "Rest and avoid physical activity. Apply ice to the injured area. Emergency Services have been contacted.";
         isEmergency = true;
+        extraText = true;
       break;
     case "cut":
         instructions = "Apply pressure to the cut with a clean cloth. If the bleeding doesn't stop after 20 minutes, call emergency services.";
+        extraText = true;  
       break;
     case "big cut":
         instructions = "Apply pressure to the cut with a clean cloth. Do not remove the cloth. Continue to add more cloths if needed. Emergency Services have been contacted.";
+        isEmergency = true;
+        extraText = true;
+      break;
+    case "bleeding internally":
+        instructions = "Lay the person on their back and elevate their legs. Emergency Services have been contacted.";
         isEmergency = true;
       break;
     case "internal bleeding":
@@ -130,7 +149,7 @@ app.post("/transcript", async (req, res) => {
   }
 
   if (isEmergency) {
-    call(address, condition)
+    call(address, condition, extraText)
     res.json({ message: instructions, transcript: transcript });
   }
 
