@@ -1,18 +1,14 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
-
-
 const app = express();
 app.use(cors());
 app.use(express.json());
 require("dotenv").config()
 var client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_TOKEN)
 
-
-
 app.get("/", (req, res) => {  
-  res.send("Hello, world!");
+  res.send("This is the server... why are you here??");
 });
 
 async function call(address){
@@ -23,7 +19,6 @@ async function call(address){
   })
 }
 
-
 app.get('/contact', (req, res) => {
   res.status(200).json('Welcome, your app is working well');
 });
@@ -32,16 +27,17 @@ app.get("/user/:id", (req, res) => {
   const userId = req.params.id;
   res.send(`User ID: ${userId}`);
 });
-function calculateAddress(lat, long) {
-  return fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
-  )
-    .then((response) => response.json())
-    .then((json) => json.display_name.split(",").slice(0,5).join(" "))
-    .catch((error) => {
-      console.error(error);
-      return "Error: Unable to fetch address";
-    });
+async function calculateAddress(lat, long) {
+  try {
+    const response = await fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${long}`
+    );
+    const json = await response.json();
+    return json.display_name.split(",").slice(0, 5).join(" ");
+  } catch (error) {
+    console.error(error);
+    return "Error: Unable to fetch address";
+  }
 }
 app.post("/transcript", async (req, res) => {
   const transcript = req.body.transcript;
@@ -96,5 +92,4 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-
-module.exports = app
+module.exports = app;
