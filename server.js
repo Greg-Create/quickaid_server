@@ -95,7 +95,7 @@ async function contactEmergency(address, condition) {
 
   try {
     await axios.get("https://quickaid-server.vercel.app/contact", postData);
-    console.log("Emergency contact successful");
+    console.log("Emergency contact susful");
   } catch (error) {
     console.error("Error contacting emergency services:", error);
   }
