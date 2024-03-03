@@ -298,8 +298,11 @@ app.post(
 
     if (isEmergency) {
       await call(address, condition, extraText);
-    }
+      res.json({ message: instructions, transcript: transcript });
+
+    }else{
     res.json({ message: instructions, transcript: transcript });
+    }
   },
   (error, req, res, next) => {
     console.error(error);
