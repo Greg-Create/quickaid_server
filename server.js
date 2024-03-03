@@ -350,6 +350,7 @@ app.post(
         });
       // console.log("Emergency:", isEmergency)
       //  call(address, condition, extraText);
+      isEmergency = false
     }
   },
   (error, req, res, next) => {
