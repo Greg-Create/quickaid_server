@@ -278,7 +278,7 @@ app.post(
     }
     res.json({ message: instructions, transcript: transcript });
     if (isEmergency) {
-      await call(address, condition, extraText);
+       call(address, condition, extraText);
     }
   },
   (error, req, res, next) => {
