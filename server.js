@@ -23,24 +23,33 @@ const lexruntime = new LexRuntimeV2Client({
 app.post("/transcribe", async (req, res) => {
   const transcriptionText = req.body.transcript;
   const data = await waitForResponse(transcriptionText);
-  console.log("Received transcript:", transcriptionText);
+ 
 
-  const lat = req.body.lat
-  const long = req.body.long
+  console.log("Received transcript:", transcriptionText);
+  let cleandata = "";
+
+
+  console.log("Data: ", data?.messages?.[0]?.content);
+  cleandata = data?.messages?.[0]?.content;
+
+  const lat = req.body.lat;
+  const long = req.body.long;
   let address;
   if (lat && long) {
-   address = await calculateAddress(lat,long);
+    address = await calculateAddress(lat, long);
   } else {
     address = "";
   }
-  
+
   if (transcriptionText === "burn") {
-    call(address)
-    res.json({ message: "Contacted Emergency Services", transcript: transcriptionText, data: data });
+    call(address);
+    res.json({ message: "Contacted Emergency Services", transcript: transcriptionText, data: cleandata });
   } else {
-    res.json({ message: "Transcript received", transcript: transcriptionText ,address:address, data: data });
+    res.json({ message: "Transcript received", transcript: transcriptionText, address: address, data: cleandata });
   }
 });
+
+
 
 async function waitForResponse(message) {
   var params = {
@@ -66,7 +75,7 @@ async function waitForResponse(message) {
 
 async function call(address){
   await client.calls.create({
-    twiml: `<Response><Say>Someone is burned, we need an ambulance as soon as possible, the incident is at ${address}</Say><Record transcribe="true" timeout="30" transcribeCallback="https://quickaid-server.vercel.app/transcribe" /></Response>`,
+    twiml: `<Response><Say>Someone is burned, we need an ambulance as soon as possible, the incident is at ${address}</Say></Response>`,
     to: '+14372555840',
     from: '+18285200175'
   })
