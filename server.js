@@ -297,7 +297,7 @@ app.post(
     }
 
     if (isEmergency) {
-      call(address, condition, extraText);
+      await call(address, condition, extraText);
     }
     res.json({ message: instructions, transcript: transcript });
   },
