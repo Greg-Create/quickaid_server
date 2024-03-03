@@ -86,6 +86,21 @@ function findWords(sentence, wordList) {
   return matches;
 }
 
+async function contactEmergency(address, condition) {
+  const postData = {
+    condition: condition,
+    extraText: true,
+    address: address,
+  };
+
+  try {
+    await axios.get("https://quickaid-server.vercel.app/contact", postData);
+    console.log("Emergency contact successful");
+  } catch (error) {
+    console.error("Error contacting emergency services:", error);
+  }
+}
+
 app.get("/contact", async (req, res) => {
   if (req.extraText) {
     req.condition = "is having a " + req.condition;
@@ -335,22 +350,8 @@ app.post(
     }
     res.json({ message: instructions, transcript: transcript });
     if (isEmergency) {
-      const postData = {
-        condition: condition,
-        extraText: true,
-        address: address,
-      };
-      await axios
-        .get("https://quickaid-server.vercel.app/contact", postData)
-        .then((response) => {
-          console.log("Response:", response.data);
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-        });
-      // console.log("Emergency:", isEmergency)
-      //  call(address, condition, extraText);
-      isEmergency = false
+      await contactEmergency(address, condition);
+     
     }
   },
   (error, req, res, next) => {
