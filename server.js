@@ -19,14 +19,6 @@ async function call(address){
   })
 }
 
-app.get('/contact', (req, res) => {
-  res.status(200).json('Welcome, your app is working well');
-});
-
-app.get("/user/:id", (req, res) => {
-  const userId = req.params.id;
-  res.send(`User ID: ${userId}`);
-});
 async function calculateAddress(lat, long) {
   try {
     const response = await fetch(
@@ -39,6 +31,7 @@ async function calculateAddress(lat, long) {
     return "Error: Unable to fetch address";
   }
 }
+
 app.post("/transcript", async (req, res) => {
   const transcript = req.body.transcript;
   const lat = req.body.lat
@@ -70,16 +63,6 @@ app.post("/transcript", async (req, res) => {
     // }
   } else {
     res.json({ message: "Transcript received", transcript: transcript,address:address });
-  }
-});
-
-app.post("/gif", (req, res) => {
-  if (req.body.transcript === "burn") {
-    res.json({
-      message:
-        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_WF_JjUjuToNWN3WCU0f3RqFy3qDfhQTDnQ&usqp=CAU",
-      transcript: req.body.transcript,
-    });
   }
 });
 
