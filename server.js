@@ -174,6 +174,10 @@ app.post(
         instructions ="Rest the ankle. Ice the ankle. Compress the ankle. Elevate the ankle.";
         extraText = true;
         break;
+        case "not breathing":
+          instructions = "If no pulse, perform CPR immediately, emergency services called"
+          isEmergency = true
+          break;
       case "cpr":
         instructions = "Make sure there is no heartbeat, Give 30 chest compressions, arms aligned at the center of the chest horizontally to the persons armits, give 2 breaths, repeat cycle";
         break;
