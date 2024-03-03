@@ -53,9 +53,9 @@ var client = require("twilio")(
   process.env.TWILIO_TOKEN
 );
 
-async function call(address, condition, extraText) {
+ function call(address, condition, extraText) {
   if (extraText) condition = "having a " + condition;
-  await client.calls.create({
+   client.calls.create({
     twiml: `<Response><Say>Someone has a ${condition}, we need an ambulance as soon as possible, the incident is located at: ${address}</Say></Response>`,
     to: "+14372555840",
     from: "+18285200175",
