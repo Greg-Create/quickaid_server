@@ -146,8 +146,8 @@ app.post(
       case "stroke":
         instructions =
           "If someone is having a stroke, recognize the signs using FAST (Face drooping, Arm weakness, Speech difficulty, Time to call emergency). Stay with the person, keep them calm, and do not give them anything to eat or drink. Emergency Services have been contacted.";
-        isEmergency = true;
         extraText = true;
+        await contactEmergency(address, condition);
         break;
       case "first degree burn":
         instructions =
@@ -157,14 +157,14 @@ app.post(
       case "second degree burn":
         instructions =
           "Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage. Emergency Services have been contacted.";
-        isEmergency = true;
         extraText = true;
+        await contactEmergency(address, condition);
         break;
       case "third degree burn":
         instructions =
           "Do NOT apply water, ointments, or ice. Cover the burn with a sterile bandage. Emergency Services have been contacted.";
-        isEmergency = true;
         extraText = true;
+        await contactEmergency(address, condition);
         break;
       case "burn":
         instructions =
@@ -184,24 +184,24 @@ app.post(
       case "seizure":
         instructions =
           "Move any nearby objects away from the person. Place the person on their side after the seizure ends. Stay with the person until they are fully alert. Emergency Services have been contacted.";
-        isEmergency = true;
         extraText = true;
+        await contactEmergency(address, condition);
         break;
       case "seizing":
         instructions =
           "Move any nearby objects away from the person. Place the person on their side after the seizure ends. Stay with the person until they are fully alert. Emergency Services have been contacted.";
-        isEmergency = true;
         extraText = true;
+        await contactEmergency(address, condition);
         break;
       case "choking":
         instructions =
           "Perform the Heimlich maneuver (abdominal thrusts from back). If the person is unable to breathe, call emergency services.";
-        isEmergency = true;
+          await contactEmergency(address, condition);
         break;
       case "fainted not breathing":
         instructions =
           "Lay the person on their back and elevate their legs. Emergency services have been contacted.";
-        isEmergency = true;
+          await contactEmergency(address, condition);
         break;
       case "fainted":
         instructions =
@@ -210,8 +210,8 @@ app.post(
       case "broken bone":
         instructions =
           "Immobilize the injured area. Apply ice to the injured area. Emergency Services have been contacted.";
-        isEmergency = true;
-        extraText = true;
+          extraText = true;
+          await contactEmergency(address, condition);
         break;
       case "sprained ankle":
         instructions =
@@ -221,8 +221,8 @@ app.post(
       case "not breathing":
         instructions =
           "If no pulse, perform CPR immediately, emergency services called";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "cpr":
         instructions =
           "Make sure there is no heartbeat, Give 30 chest compressions, arms aligned at the center of the chest horizontally to the persons armits, give 2 breaths, repeat cycle";
@@ -230,14 +230,14 @@ app.post(
       case "concussion":
         instructions =
           "Treatment: Rest and avoid physical activity. Apply ice to the injured area. Emergency Services have been contacted.";
-        isEmergency = true;
-        extraText = true;
+          await contactEmergency(address, condition);
+          extraText = true;
         break;
       case "head injury":
         instructions =
           "Treatment: Rest and avoid physical activity. Apply ice to the injured area. Emergency Services have been contacted.";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "cut":
         instructions =
           "Apply pressure to the cut with a clean cloth. If the bleeding doesn't stop after 20 minutes, call emergency services.";
@@ -246,19 +246,19 @@ app.post(
       case "big cut":
         instructions =
           "Apply pressure to the cut with a clean cloth. Do not remove the cloth. Continue to add more cloths if needed. Emergency Services have been contacted.";
-        isEmergency = true;
         extraText = true;
+        await contactEmergency(address, condition);
         break;
       case "bleeding internally":
         instructions =
           "Lay the person on their back and elevate their legs. Emergency Services have been contacted.";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "internal bleeding":
         instructions =
           "Lay the person on their back and elevate their legs. Emergency Services have been contacted.";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "bleeding":
         instructions =
           "Apply pressure to the cut with a clean cloth. If the bleeding doesn't stop after 20 minutes, call emergency services.";
@@ -266,13 +266,13 @@ app.post(
       case "stabbed":
         instructions =
           "Apply direct pressure to control bleeding, emergency services have been contacted";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "stab":
         instructions =
           "Apply direct pressure to control bleeding, emergency services have been contacted";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "bitten":
         instructions =
           "Clean the wound with soap and water, apply an antibiotic ointment, cover with a sterile bandage,seek medical attention to prevent infection and evaluate for rabies";
@@ -309,52 +309,47 @@ app.post(
       case "snake bite":
         instructions =
           "Keep the affected limb immobilized below heart level, remove tight clothing or jewelry, clean the wound, apply a sterile bandage, emergency services have been called.";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "bitten by snake":
         instructions =
           "Keep the affected limb immobilized below heart level, remove tight clothing or jewelry, clean the wound, apply a sterile bandage, emergency services have been called.";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "severe bleeding":
         instructions =
           "Keep the affected limb immobilized below heart level, remove tight clothing or jewelry, clean the wound, apply a sterile bandage, emergency services have been called";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "electric shock":
         instructions =
           "Ensure safety from the electrical source, perform CPR if necessary, emergency services called.";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "electrocuted":
         instructions =
           "Ensure safety from the electrical source, perform CPR if necessary, emergency services called.";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       case "drowning":
         instructions = "Preform CPR, emergency services have been called ";
-        isEmergency = true;
+        await contactEmergency(address, condition);
         break;
       case "drowned":
         instructions = "Preform CPR, emergency services have been called ";
-        isEmergency = true;
+        await contactEmergency(address, condition);
         break;
       case "allergy":
         instructions =
           "Administer epinephrine (EpiPen), emergency services called";
-        isEmergency = true;
-        break;
+          await contactEmergency(address, condition);
+          break;
       default:
         instructions = "I did not understand. Can you please explain again?";
         break;
     }
     res.json({ message: instructions, transcript: transcript });
-    if (isEmergency) {
-      console.log("BOBBBBBb")
-      await contactEmergency(address, condition);
-      isEmergency = false
-     
-    }
+    
   },
   (error, req, res, next) => {
     console.error(error);
