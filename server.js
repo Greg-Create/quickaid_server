@@ -53,10 +53,12 @@ var client = require("twilio")(
   process.env.TWILIO_TOKEN
 );
 
- function call(address, condition, extraText) {
-  if (extraText) condition = "having a " + condition;
-   client.calls.create({
-    twiml: `<Response><Say>Someone has a ${condition}, we need an ambulance as soon as possible, the incident is located at: ${address}</Say></Response>`,
+ async function call(address, condition, extraText) {
+  if (extraText) {condition = "is having a " + condition}else{
+    condition = "has a " + condition
+  };
+  await client.calls.create({
+    twiml: `<Response><Say>Someone ${condition}, we need an ambulance as soon as possible, the incident is located at: ${address}</Say></Response>`,
     to: "+14372555840",
     from: "+18285200175",
   });
