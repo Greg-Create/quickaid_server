@@ -72,7 +72,7 @@ app.post(
   "/transcript",
   async (req, res) => {
     const transcript = req.body.transcript;
-    const condition = findWords(transcript, conditions);
+    const condition = findWords(transcript.toLowerCase(), conditions);
     const lat = req.body.lat;
     const long = req.body.long;
     let address;
