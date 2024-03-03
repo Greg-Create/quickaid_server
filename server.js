@@ -25,6 +25,25 @@ const conditions = [
   "bleeding internally",
   "internal bleeding",
   "bleeding",
+  "stabbed",
+  "stab",
+  "bitten",
+  "asthma",
+    "hypothermia",
+    "freezing",
+    "really cold",
+    "heatstroke",
+    "really hot",
+    "sunstroke",
+    "snake bite",
+    "bitten by snake",
+    "severe bleeding",
+    "electric shock",
+    "electrocuted",
+    "drowning",
+    "drowned",
+    "allergy",
+    "cpr"
 ];
 app.use(cors());
 app.use(express.json());
@@ -82,99 +101,84 @@ app.post(
       address = "";
     }
 
-    const conditionVariable = condition ? condition.toString().toLowerCase() : "";
+    const conditionVariable = condition
+      ? condition.toString().toLowerCase()
+      : "";
     let isEmergency = false;
     let instructions = "";
     let extraText = false;
     switch (conditionVariable) {
       case "heart attack":
-        instructions =
-          "Ensure calmness through deep breaths.Consume Aspirin if needed. Consume  nitroglycerin, if needed. If previous heart condition, take prescribed medication. Emergency Services have been contacted.";
+        instructions ="Ensure calmness through deep breaths.Consume Aspirin if needed. Consume  nitroglycerin, if needed. If previous heart condition, take prescribed medication. Emergency Services have been contacted.";
         isEmergency = true;
         extraText = true;
         break;
       case "stroke":
-        instructions =
-          "If someone is having a stroke, recognize the signs using FAST (Face drooping, Arm weakness, Speech difficulty, Time to call emergency). Stay with the person, keep them calm, and do not give them anything to eat or drink. Emergency Services have been contacted.";
+        instructions ="If someone is having a stroke, recognize the signs using FAST (Face drooping, Arm weakness, Speech difficulty, Time to call emergency). Stay with the person, keep them calm, and do not give them anything to eat or drink. Emergency Services have been contacted.";
         isEmergency = true;
         extraText = true;
         break;
       case "first degree burn":
-        instructions =
-          "Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage.";
+        instructions ="Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage.";
         extraText = true;
         break;
       case "second degree burn":
-        instructions =
-          "Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage. Emergency Services have been contacted.";
+        instructions = "Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage. Emergency Services have been contacted.";
         isEmergency = true;
         extraText = true;
         break;
       case "third degree burn":
-        instructions =
-          "Do NOT apply water, ointments, or ice. Cover the burn with a sterile bandage. Emergency Services have been contacted.";
+        instructions ="Do NOT apply water, ointments, or ice. Cover the burn with a sterile bandage. Emergency Services have been contacted.";
         isEmergency = true;
         extraText = true;
         break;
       case "burn":
-        instructions =
-          "Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage.";
+        instructions ="Run cool water over the area for 3-5 minutes. Take an over-the-counter pain reliever. Apply an antibiotic ointment. Cover the burn with a sterile bandage.";
         extraText = true;
         break;
       case "nose bleed":
-        instructions =
-          "Sit down and lean forward. Pinch the nose and breathe through the mouth. Apply an ice pack to the nose. If the bleeding doesn't stop after 20 minutes, call emergency services.";
+        instructions ="Sit down and lean forward. Pinch the nose and breathe through the mouth. Apply an ice pack to the nose. If the bleeding doesn't stop after 20 minutes, call emergency services.";
         extraText = true;
         break;
       case "bloody nose":
-        instructions =
-          "Sit down and lean forward. Pinch the nose and breathe through the mouth. Apply an ice pack to the nose. If the bleeding doesn't stop after 20 minutes, call emergency services.";
+        instructions ="Sit down and lean forward. Pinch the nose and breathe through the mouth. Apply an ice pack to the nose. If the bleeding doesn't stop after 20 minutes, call emergency services.";
         extraText = true;
         break;
       case "seizure":
-        instructions =
-          "Move any nearby objects away from the person. Place the person on their side after the seizure ends. Stay with the person until they are fully alert. Emergency Services have been contacted.";
+        instructions = "Move any nearby objects away from the person. Place the person on their side after the seizure ends. Stay with the person until they are fully alert. Emergency Services have been contacted.";
         isEmergency = true;
         extraText = true;
         break;
       case "seizing":
-        instructions =
-          "Move any nearby objects away from the person. Place the person on their side after the seizure ends. Stay with the person until they are fully alert. Emergency Services have been contacted.";
+        instructions = "Move any nearby objects away from the person. Place the person on their side after the seizure ends. Stay with the person until they are fully alert. Emergency Services have been contacted.";
         isEmergency = true;
         extraText = true;
         break;
       case "choking":
-        instructions =
-          "Perform the Heimlich maneuver (abdominal thrusts from back). If the person is unable to breathe, call emergency services.";
+        instructions = "Perform the Heimlich maneuver (abdominal thrusts from back). If the person is unable to breathe, call emergency services.";
         isEmergency = true;
         break;
       case "fainted not breathing":
-        instructions =
-          "Lay the person on their back and elevate their legs. Emergency services have been contacted.";
+        instructions = "Lay the person on their back and elevate their legs. Emergency services have been contacted.";
         isEmergency = true;
         break;
       case "fainted":
-        instructions =
-          "Lay the person on their back and elevate their legs. If the person is not breathing, call emergency services.";
+        instructions = "Lay the person on their back and elevate their legs. If the person is not breathing, call emergency services.";
         break;
       case "broken bone":
-        instructions =
-          "Immobilize the injured area. Apply ice to the injured area. Emergency Services have been contacted.";
+        instructions ="Immobilize the injured area. Apply ice to the injured area. Emergency Services have been contacted.";
         isEmergency = true;
         extraText = true;
         break;
       case "sprained ankle":
-        instructions =
-          "Rest the ankle. Ice the ankle. Compress the ankle. Elevate the ankle.";
+        instructions ="Rest the ankle. Ice the ankle. Compress the ankle. Elevate the ankle.";
         extraText = true;
         break;
       case "cpr":
-        instructions =
-          "Make sure there is no heartbeat, Give 30 chest compressions, arms aligned at the center of the chest horizontally to the persons armits, give 2 breaths, repeat cycle";
+        instructions = "Make sure there is no heartbeat, Give 30 chest compressions, arms aligned at the center of the chest horizontally to the persons armits, give 2 breaths, repeat cycle";
         break;
       case "concussion":
-        instructions =
-          "Treatment: Rest and avoid physical activity. Apply ice to the injured area. Emergency Services have been contacted.";
+        instructions = "Treatment: Rest and avoid physical activity. Apply ice to the injured area. Emergency Services have been contacted.";
         isEmergency = true;
         extraText = true;
         break;
@@ -182,102 +186,78 @@ app.post(
         instructions =
           "Treatment: Rest and avoid physical activity. Apply ice to the injured area. Emergency Services have been contacted.";
         isEmergency = true;
+        break;
       case "cut":
-        instructions =
-          "Apply pressure to the cut with a clean cloth. If the bleeding doesn't stop after 20 minutes, call emergency services.";
+        instructions = "Apply pressure to the cut with a clean cloth. If the bleeding doesn't stop after 20 minutes, call emergency services.";
         extraText = true;
         break;
       case "big cut":
-        instructions =
-          "Apply pressure to the cut with a clean cloth. Do not remove the cloth. Continue to add more cloths if needed. Emergency Services have been contacted.";
+        instructions = "Apply pressure to the cut with a clean cloth. Do not remove the cloth. Continue to add more cloths if needed. Emergency Services have been contacted.";
         isEmergency = true;
         extraText = true;
         break;
       case "bleeding internally":
-        instructions =
-          "Lay the person on their back and elevate their legs. Emergency Services have been contacted.";
+        instructions = "Lay the person on their back and elevate their legs. Emergency Services have been contacted.";
         isEmergency = true;
         break;
       case "internal bleeding":
-        instructions =
-          "Lay the person on their back and elevate their legs. Emergency Services have been contacted.";
+        instructions = "Lay the person on their back and elevate their legs. Emergency Services have been contacted.";
         isEmergency = true;
         break;
       case "bleeding":
-        instructions =
-          "Apply pressure to the cut with a clean cloth. If the bleeding doesn't stop after 20 minutes, call emergency services.";
+        instructions = "Apply pressure to the cut with a clean cloth. If the bleeding doesn't stop after 20 minutes, call emergency services.";
         break;
       case "stabbed":
-        instructions =
-          "Apply direct pressure to control bleeding, emergency services have been contacted";
+        instructions = "Apply direct pressure to control bleeding, emergency services have been contacted";
         isEmergency = true;
         break;
       case "stab":
-        instructions =
-          "Apply direct pressure to control bleeding, emergency services have been contacted";
+        instructions ="Apply direct pressure to control bleeding, emergency services have been contacted";
         isEmergency = true;
         break;
-
       case "bitten":
-        instructions =
-          "Clean the wound with soap and water, apply an antibiotic ointment, cover with a sterile bandage,seek medical attention to prevent infection and evaluate for rabies";
+        instructions ="Clean the wound with soap and water, apply an antibiotic ointment, cover with a sterile bandage,seek medical attention to prevent infection and evaluate for rabies";
         break;
       case "asthma":
-        instructions =
-          "dminister a rescue inhaler (e.g., albuterol), assist with using a spacer if available, help the person sit upright and breathe slowly, call emergency services if symptoms worsen.";
+        instructions ="administer a rescue inhaler (e.g., albuterol), assist with using a spacer if available, help the person sit upright and breathe slowly, call emergency services if symptoms worsen.";
         break;
       case "hypothermia":
-        instructions =
-          "Gradually warm the person, remove wet clothing if necessary, cover with blankets or warm clothing, provide/consume warm drinks, seek medical help.";
+        instructions ="Gradually warm the person, remove wet clothing if necessary, cover with blankets or warm clothing, provide/consume warm drinks, seek medical help.";
         break;
       case "freezing":
-        instructions =
-          "Gradually warm the person, remove wet clothing if necessary, cover with blankets or warm clothing, provide/consume warm drinks, seek medical help.";
+        instructions ="Gradually warm the person, remove wet clothing if necessary, cover with blankets or warm clothing, provide/consume warm drinks, seek medical help.";
         break;
       case "really cold":
-        instructions =
-          "Gradually warm the person, remove wet clothing if necessary, cover with blankets or warm clothing, provide/consume warm drinks, seek medical help.";
+        instructions ="Gradually warm the person, remove wet clothing if necessary, cover with blankets or warm clothing, provide/consume warm drinks, seek medical help.";
         break;
       case "heatstroke":
-        instructions =
-          "Move to a cooler place, remove excess clothing, apply cool compresses or immerse in cool water, fan, offer/consume fluids if conscious, seek medical help.";
+        instructions = "Move to a cooler place, remove excess clothing, apply cool compresses or immerse in cool water, fan, offer/consume fluids if conscious, seek medical help.";
         break;
       case "really hot":
-        instructions =
-          "Move to a cooler place, remove excess clothing, apply cool compresses or immerse in cool water, fan, offer/consume fluids if conscious, seek medical help.";
+        instructions = "Move to a cooler place, remove excess clothing, apply cool compresses or immerse in cool water, fan, offer/consume fluids if conscious, seek medical help.";
         break;
       case "sunstroke":
-        instructions =
-          "Move to a cooler place, remove excess clothing, apply cool compresses or immerse in cool water, fan, offer/consume fluids if conscious, seek medical help.";
+        instructions ="Move to a cooler place, remove excess clothing, apply cool compresses or immerse in cool water, fan, offer/consume fluids if conscious, seek medical help.";
         break;
-      case "head injury":
-        instructions =
-          " Keep the person still and calm, apply a cold compress to reduce swelling, monitor for signs of worsening condition, emergency services have been called.";
-        isEmergency = true;
-        break;
+ 
       case "snake bite":
-        instructions =
-          " Keep the affected limb immobilized below heart level, remove tight clothing or jewelry, clean the wound, apply a sterile bandage, emergency services have been called.";
+        instructions ="Keep the affected limb immobilized below heart level, remove tight clothing or jewelry, clean the wound, apply a sterile bandage, emergency services have been called.";
         isEmergency = true;
         break;
       case "bitten by snake":
-        instructions =
-          "Keep the affected limb immobilized below heart level, remove tight clothing or jewelry, clean the wound, apply a sterile bandage, emergency services have been called.";
+        instructions = "Keep the affected limb immobilized below heart level, remove tight clothing or jewelry, clean the wound, apply a sterile bandage, emergency services have been called.";
         isEmergency = true;
         break;
       case "severe bleeding":
-        instructions =
-          "Keep the affected limb immobilized below heart level, remove tight clothing or jewelry, clean the wound, apply a sterile bandage, emergency services have been called";
+        instructions = "Keep the affected limb immobilized below heart level, remove tight clothing or jewelry, clean the wound, apply a sterile bandage, emergency services have been called";
         isEmergency = true;
         break;
       case "electric shock":
-        instructions =
-          "Ensure safety from the electrical source, perform CPR if necessary, emergency services called.";
+        instructions = "Ensure safety from the electrical source, perform CPR if necessary, emergency services called.";
         isEmergency = true;
         break;
       case "electrocuted":
-        instructions =
-          "Ensure safety from the electrical source, perform CPR if necessary, emergency services called.";
+        instructions = "Ensure safety from the electrical source, perform CPR if necessary, emergency services called.";
         isEmergency = true;
         break;
       case "drowning":
@@ -288,17 +268,17 @@ app.post(
         instructions = "Preform CPR, emergency services have been called ";
         isEmergency = true;
         break;
-       case "allergy" :
-        instructions = "Administer epinephrine (EpiPen), emergency services called"
+      case "allergy":
+        instructions ="Administer epinephrine (EpiPen), emergency services called";
         isEmergency = true;
-        break
+        break;
       default:
         instructions = "I did not understand. Can you please explain again?";
+        break;
     }
     res.json({ message: instructions, transcript: transcript });
     if (isEmergency) {
       await call(address, condition, extraText);
-
     }
   },
   (error, req, res, next) => {
