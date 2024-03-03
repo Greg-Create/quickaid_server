@@ -1,23 +1,19 @@
 const express = require("express");
 const cors = require("cors");
+const axios = require("axios");
+const http = require('http');
 const app = express();
+const server = http.createServer(app);
+const io = require('socket.io')(server);
 const conditions = ["heart attack", "stroke", "first degree burn", "second degree burn", "third degree burn", "burn", "nose bleed", "seizure", "choking", "fainted not breathing", "fainted", "broken bone", "sprained ankle", "concussion", "cut", "big cut", "bleeding internally", "internal bleeding", "bleeding"];
 app.use(cors());
 app.use(express.json());
 require("dotenv").config()
 var client = require('twilio')(process.env.TWILIO_ACCOUNT_SID, process.env.TWILIO_TOKEN)
 
-const lexruntime = new LexRuntimeV2Client({
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
-  }
-});
 
-app.use((req, res, next) => {
-  res.status(404).send("404 - Not Found");
-});
+
+
 
 async function call(address, condition, extraText){
   if (extraText) condition = "having a " + condition;
@@ -48,6 +44,12 @@ function findWords(sentence, wordList) {
   return matches;
 }
 
+
+app.get("/contact", (req,res)=>{
+  console.log("Bob")
+  res.send("Hello")
+})
+
 app.post("/transcript", async (req, res) => {
   const transcript = req.body.transcript;
   const condition = findWords(transcript, conditions);
@@ -59,12 +61,12 @@ app.post("/transcript", async (req, res) => {
   }else{
     address = ""
   }
-  console.log("Received transcript:", transcript);
 
+  const conditionVariable = condition.toString()
   let isEmergency = false;
   let instructions = "";
   let extraText = false;
-  switch (condition) {
+  switch (conditionVariable) {
     case "heart attack":
         instructions = "Please stay calm and take deep breaths. If you have aspirin, take it. If you have nitroglycerin, take it. If you have a heart condition, take your prescribed medication. Emergency Services have been contacted.";
         isEmergency = true;
@@ -147,18 +149,20 @@ app.post("/transcript", async (req, res) => {
     case "bleeding":
         instructions = "Apply pressure to the cut with a clean cloth. If the bleeding doesn't stop after 20 minutes, call emergency services.";
       break;
-    deafault:
+    default:
       instructions = "I did not understand. Can you please explain again?"
+      
   }
 
   if (isEmergency) {
     call(address, condition, extraText)
-    res.json({ message: instructions, transcript: transcript });
   }
+    res.json({message:instructions,transcript:transcript})
+  
 
 }, (error, req, res, next) => {
   console.error(error);
-  res.status(500).json({ message: "Error processing transcript: " + error });
+  //res.status(500).json({ message: "Error processing transcript: " + error });
 });
     // try {
     //   const response = await axios.post("http://localhost:8080/gif", {
@@ -174,6 +178,10 @@ app.post("/transcript", async (req, res) => {
     //   console.error("Error fetching GIF:", error);
     //   res.status(500).json({ message: "Error fetching GIF" });
     // }
+
+    app.use((req, res, next) => {
+      res.status(404).send("404 - Not Found");
+    });
 
 const PORT = 8080;
 server.listen(PORT, () => {
