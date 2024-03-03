@@ -295,13 +295,10 @@ app.post(
       default:
         instructions = "I did not understand. Can you please explain again?";
     }
-
+    res.json({ message: instructions, transcript: transcript });
     if (isEmergency) {
-      res.json({ message: instructions, transcript: transcript });
       await call(address, condition, extraText);
 
-    }else{
-    res.json({ message: instructions, transcript: transcript });
     }
   },
   (error, req, res, next) => {
