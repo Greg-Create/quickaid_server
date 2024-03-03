@@ -62,7 +62,7 @@ app.post("/transcript", async (req, res) => {
     address = ""
   }
 
-  const conditionVariable = condition.toString()
+  const conditionVariable = condition? condition.toString() :""
   let isEmergency = false;
   let instructions = "";
   let extraText = false;
@@ -151,7 +151,6 @@ app.post("/transcript", async (req, res) => {
       break;
     default:
       instructions = "I did not understand. Can you please explain again?"
-      
   }
 
   if (isEmergency) {
