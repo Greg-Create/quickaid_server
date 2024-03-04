@@ -108,7 +108,7 @@ app.post("/contact", async (req, res) => {
   
   await client.calls.create({
     twiml: `<Response><Say>Someone ${condition}, we need an ambulance as soon as possible, the incident is located at: ${address}     thank you</Say></Response>`,
-    to: "+14372555840",
+    to: "+",
     from: "+18285200175",
   });
   console.log("called");
